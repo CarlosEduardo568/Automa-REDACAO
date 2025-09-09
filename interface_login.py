@@ -19,12 +19,12 @@ def validar_login(usuario_entry, senha_entry, resultado_label):
 def criar_campos(app):
     # Campo usuário
     ctk.CTkLabel(app, text='Usuário(RA):').pack(pady=10)
-    entrada_usuario = ctk.CTkEntry(app, placeholder_text='Digite seu RA')
+    entrada_usuario = ctk.CTkEntry(app, placeholder_text='Digite seu RA e dígito',width=250)
     entrada_usuario.pack(pady=10)
 
     # Campo senha
     ctk.CTkLabel(app, text='Senha:').pack(pady=10)
-    entrada_senha = ctk.CTkEntry(app, placeholder_text='Digite sua senha', show='*')
+    entrada_senha = ctk.CTkEntry(app, placeholder_text='Digite sua senha', show='*',width=250)
     entrada_senha.pack(pady=10)
 
     # resultado login
@@ -53,5 +53,4 @@ def criar_janela():
 
 # ----- Executa o programa -----
 if __name__ == '__main__':
-
     criar_janela()
