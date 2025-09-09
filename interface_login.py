@@ -53,4 +53,5 @@ def criar_janela():
 
 # ----- Executa o programa -----
 if __name__ == '__main__':
+
     criar_janela()
