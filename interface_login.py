@@ -15,8 +15,8 @@ def validar_login(usuario_entry, senha_entry, resultado_label):
         resultado_label.configure(text='Login ou senha inválidos!', text_color='red')
 
 
-# ----- Função para criar widgets -----
-def criar_widgets(app):
+# ----- Função para criar campos -----
+def criar_campos(app):
     # Campo usuário
     ctk.CTkLabel(app, text='Usuário(RA):').pack(pady=10)
     entrada_usuario = ctk.CTkEntry(app, placeholder_text='Digite seu RA')
@@ -46,7 +46,7 @@ def criar_janela():
     app.title('Login Sala do Futuro')
     app.geometry('300x300')
 
-    criar_widgets(app)
+    criar_campos(app)
 
     app.mainloop()
 
