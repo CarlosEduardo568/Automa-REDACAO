@@ -43,7 +43,8 @@ def criar_campos(app):
         app,
         text='Logar',
         command=lambda: validar_login(entrada_usuario, entrada_senha, resultado_login),
-        border_width=3,border_color='#005180',
+        border_width=3,
+        border_color='#005180',
         width=280
     )
     botao_login.pack(pady=10)
