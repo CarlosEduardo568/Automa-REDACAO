@@ -1,4 +1,5 @@
 import customtkinter as ctk
+
 # ----- Configuração global -----
 ctk.set_appearance_mode('dark')
 
@@ -16,17 +17,18 @@ def validar_login(usuario_entry, senha_entry, resultado_label):
 
 # ----- Função para criar campos -----
 def criar_campos(app):
-    # Label Sala do Futuro
-    label_sala_do_futuro = ctk.CTkLabel(app,text='Login Sala do Futuro',
+    # Label sala do futuro
+    label_titulo = ctk.CTkLabel(app,text='Login Sala do Futuro',
     font=('default',15,'bold'))
-    label_sala_do_futuro.pack(pady=(10,0))
-
+    label_titulo.pack(pady=(10,17))
     # Campo usuário
-    entrada_usuario = ctk.CTkEntry(app, placeholder_text='Digite seu RA com dígito (ex: 123456x)',width=280)
-    entrada_usuario.pack(pady=(17,22))
+    entrada_usuario = ctk.CTkEntry(app, placeholder_text='Digite seu RA com dígito (ex: 12345x)',
+    width=280)
+    entrada_usuario.pack(pady=(0,22))
 
     # Campo senha
-    entrada_senha = ctk.CTkEntry(app, placeholder_text='Digite sua senha', show='*',width=280)
+    entrada_senha = ctk.CTkEntry(app, placeholder_text='Digite sua senha',
+    width=280)
     entrada_senha.pack()
 
     # resultado login
