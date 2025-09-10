@@ -16,7 +16,12 @@ def validar_login(usuario_entry, senha_entry, resultado_login):
     dados_login["digito"] = usuario[-1]
     dados_login["senha"] = senha
 
-    resultado_login.configure(text='entrando na Sala do Futuro...',text_color='green')
+    # verifica se o login é válido
+    if not usuario or senha:
+        resultado_login.configure(text='entrando na Sala do Futuro...',text_color='green')
+
+    else:
+        resultado_login.configure(text='login ou senha inválidos',text_color='red')
 
 # ----- Função para criar campos -----
 def criar_campos(app):
