@@ -22,7 +22,7 @@ def criar_campos(app):
     font=('default',15,'bold'))
     label_titulo.pack(pady=(10,17))
     # Campo usuário
-    entrada_usuario = ctk.CTkEntry(app, placeholder_text='Digite seu RA com dígito (ex: 12345x)',
+    entrada_usuario = ctk.CTkEntry(app, placeholder_text='Digite seu RA com dígito (ex: 123456x)',
     width=280)
     entrada_usuario.pack(pady=(0,22))
 
