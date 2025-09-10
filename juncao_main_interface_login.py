@@ -12,7 +12,7 @@ def validar_login(usuario_entry, senha_entry, resultado_login):
     senha = senha_entry.get()
 
     # Salva os valores nas variáveis globais
-    dados_login["ra"] = usuario[len(usuario)-1]
+    dados_login["ra"] = usuario[:-1]
     dados_login["digito"] = usuario[-1]
     dados_login["senha"] = senha
 
@@ -60,6 +60,38 @@ def criar_janela():
     criar_campos(app)
 
     app.mainloop()
+
+import asyncio
+from playwright.async_api import async_playwright
+
+async def preencher_dados_estudante(pagina, ra, digito, senha):
+    # Seleciona "Estudante"
+    clicar_sou_estudante = pagina.get_by_text('Estudante', exact=True)
+    await clicar_sou_estudante.click()
+
+    # Preenche o RA
+    ra_input = pagina.get_by_role('textbox', name='RA')
+    await ra_input.fill(ra)
+
+    # Preenche o dígito
+    digito_input = pagina.get_by_role('textbox', name='Dígito')
+    await digito_input.fill(digito)
+
+    # Preenche a senha
+    senha_input = pagina.get_by_role('textbox', name='Digite sua senha')
+    await senha_input.fill(senha)
+
+    # TODO: clicar no botão "Acessar"
+    acessar_btn = pagina.get_by_role('button', name='Acessar')
+    await acessar_btn.click()
+
+    # Agora usa os dados no Playwright
+    async with async_playwright() as pw:
+        navegador = await pw.chromium.launch(headless=False)
+        pagina = await navegador.new_page()
+        await pagina.goto('https://saladofuturo.educacao.sp.gov.br/escolha-de-perfil')
+        await preencher_dados_estudante(pagina, ra, digito, senha)
+        await pagina.wait_for_timeout(10000)
 
 
 # ----- Executa o programa -----

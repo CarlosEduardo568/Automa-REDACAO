@@ -20,8 +20,8 @@ async def preencher_dados_estudante(pagina, ra, digito, senha):
     await senha_input.fill(senha)
 
     # TODO: clicar no botão "Acessar"
-    # acessar_btn = pagina.get_by_role('button', name='Acessar')
-    # await acessar_btn.click()
+    acessar_btn = pagina.get_by_role('button', name='Acessar')
+    await acessar_btn.click()
 
 async def main():
     # Primeiro abre a interface e pega os dados
