@@ -3,16 +3,19 @@ import customtkinter as ctk
 # ----- Configuração global -----
 ctk.set_appearance_mode('dark')
 
+# Variáveis globais para guardar os dados digitados
+dados_login = {"ra": "", "digito": "", "senha": ""}
 
 # ----- Função para validar login -----
 def validar_login(usuario_entry, senha_entry, resultado_label):
     usuario = usuario_entry.get()
     senha = senha_entry.get()
 
-    if usuario == 'Carlos' and senha == '1234':
-        resultado_label.configure(text='Seja bem vindo Carlos bonitão😉', text_color='green')
-    else:
-        resultado_label.configure(text='Login ou senha inválidos!', text_color='red')
+    # Salva os valores nas variáveis globais
+    dados_login["ra"] = usuario[len(usuario)-1]
+    dados_login["digito"] = usuario[-1]
+    dados_login["senha"] = senha
+
 
 
 # ----- Função para criar campos -----
