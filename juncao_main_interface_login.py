@@ -18,6 +18,9 @@ def validar_login(usuario_entry, senha_entry, resultado_login):
 
     resultado_login.configure(text='entrando na Sala do Futuro...',text_color='green')
 
+    # Chama a automação depois do login
+    asyncio.run(main())
+
 # ----- Função para criar campos -----
 def criar_campos(app):
     # Label sala do futuro
