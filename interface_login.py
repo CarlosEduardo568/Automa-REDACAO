@@ -20,6 +20,8 @@ def validar_login(usuario_entry, senha_entry, resultado_login,app):
     if usuario or senha:
         resultado_login.configure(text='entrando na Sala do Futuro...',text_color='green')
 
+        # encerrar a execução depois do login
+        app.after(500, app.destroy)
     else:
         resultado_login.configure(text='login ou senha inválidos',text_color='red')
 
