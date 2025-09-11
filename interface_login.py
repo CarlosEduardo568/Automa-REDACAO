@@ -17,7 +17,7 @@ def validar_login(usuario_entry, senha_entry, resultado_login,app):
     dados_login["senha"] = senha
 
     # verifica se o login é válido
-    if not usuario or senha:
+    if usuario or senha:
         resultado_login.configure(text='entrando na Sala do Futuro...',text_color='green')
 
     else:
