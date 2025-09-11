@@ -1,102 +1,50 @@
 import customtkinter as ctk
 
-# ----- Configuração global -----
 ctk.set_appearance_mode('dark')
+dados_login = {}
 
-# Variáveis globais para guardar os dados digitados
-dados_login = {"ra": "", "digito": "", "senha": ""}
+def validar_login(usuario_entry, senha_entry, redacao_textbox, app):
+    usuario = usuario_entry.get().strip()
+    senha = senha_entry.get().strip()
+    redacao = redacao_textbox.get("1.0", "end-1c").strip()  # pega todo o texto da redação
 
-# ----- Função para validar login -----
-def validar_login(usuario_entry, senha_entry, resultado_login,app):
-    usuario = usuario_entry.get()
-    senha = senha_entry.get()
-
-    # Salva os valores nas variáveis globais
-    dados_login["ra"] = usuario[len(usuario)-1]
-    dados_login["digito"] = usuario[-1]
-    dados_login["senha"] = senha
-
-    # verifica se o login é válido
-    if usuario or senha:
-        # Salva os valores nas variáveis globais
-        dados_login["ra"] = usuario[len(usuario) - 1]
-        dados_login["digito"] = usuario[-1]
-        dados_login["senha"] = senha
-
-        resultado_login.configure(text='Entrando na Sala do Futuro...',text_color='green')
-
-        # encerrar a execução depois do login
-        app.after(500, app.destroy)
+    if "-" in usuario:
+        ra, digito = usuario.split("-")
     else:
-        resultado_login.configure(text='login ou senha inválidos',text_color='red')
+        ra, digito = usuario[:-1], usuario[-1]
 
-# ----- Função para criar campos -----
-def criar_campos(app):
-    # Label sala do futuro
-    label_titulo = ctk.CTkLabel(app,text='Login Sala do Futuro',
-    font=('default',15,'bold'))
-    label_titulo.pack(pady=(10,17))
-    # Campo usuário
-    entrada_usuario = ctk.CTkEntry(app, placeholder_text='Digite seu RA com dígito (ex: 123456x)',
-    width=280)
-    entrada_usuario.pack(pady=(0,22))
+    dados_login["ra"] = ra
+    dados_login["digito"] = digito
+    dados_login["senha"] = senha
+    dados_login["redacao"] = redacao  # armazena a redação
 
-    # Campo senha
-    entrada_senha = ctk.CTkEntry(app, placeholder_text='Digite sua senha',
-    show='*',
-    width=280)
-    entrada_senha.pack(pady=(0,10))
+    app.destroy()
 
-    # Checkbox mostrar senha
-    checkbox_var = ctk.BooleanVar(value=False)
-
-    checkbox = ctk.CTkCheckBox(
-        master=app,
-        text='Mostrar senha',
-        variable=checkbox_var,
-        onvalue=True,
-        offvalue=False)
-    checkbox.pack(pady=10,padx=10,anchor='w')
-
-    # Botão login
-    botao_login = ctk.CTkButton(
-        app,
-        text='Logar',
-        command=lambda: validar_login(entrada_usuario, entrada_senha, resultado_login,app),
-        border_width=3,
-        border_color='#005180',
-        width=280
-    )
-    botao_login.pack(pady=10)
-
-    # resultado login
-    resultado_login = ctk.CTkLabel(app, text='')
-    resultado_login.pack(pady=10)
-
-# ----- Função para criar a janela principal -----
 def criar_janela():
-    largura_janela = 300
-    altura_janela = 300
     app = ctk.CTk()
     app.title('Login Automático')
+    app.geometry('400x500')
 
-    # ------------ centralizar ---------
-    largura_tela = app.winfo_screenwidth()  # largura da tela
-    altura_tela = app.winfo_screenheight()  # altura da tela
+    # Título
+    ctk.CTkLabel(app, text='Login Sala do Futuro', font=('default', 15, 'bold')).pack(pady=(10, 17))
 
-    x = (largura_tela - largura_janela) // 2
-    y = (altura_tela - altura_janela) // 2
+    # RA + dígito
+    entrada_usuario = ctk.CTkEntry(app, placeholder_text='RA com dígito (ex: 1234567-8)', width=280)
+    entrada_usuario.pack(pady=(0, 10))
 
-    app.geometry(f"{largura_janela}x{altura_janela}+{x}+{y}")  # tamanho + posição
+    # Senha
+    entrada_senha = ctk.CTkEntry(app, placeholder_text='Digite sua senha', show="*", width=280)
+    entrada_senha.pack(pady=(0, 20))
 
-    #-----------------------------------------
-    criar_campos(app)
+    # Redação
+    ctk.CTkLabel(app, text='Digite sua Redação:', font=('default', 12, 'bold')).pack(pady=(0,5))
+    redacao_textbox = ctk.CTkTextbox(app, width=350, height=200)
+    redacao_textbox.pack(pady=(0, 20))
+
+    # Botão login
+    ctk.CTkButton(app, text='Entrar',
+                  command=lambda: validar_login(entrada_usuario, entrada_senha, redacao_textbox, app),
+                  border_width=2, border_color='#005180', width=280).pack()
 
     app.mainloop()
-
     return dados_login
-
-
-# ----- Executa o programa -----
-if __name__ == '__main__':
-    criar_janela()

@@ -1,1 +1,0 @@
-def mostrar_caracteres():
