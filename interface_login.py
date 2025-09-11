@@ -38,6 +38,7 @@ def criar_campos(app):
 
     # Campo senha
     entrada_senha = ctk.CTkEntry(app, placeholder_text='Digite sua senha',
+    show='*',
     width=280)
     entrada_senha.pack()
 
