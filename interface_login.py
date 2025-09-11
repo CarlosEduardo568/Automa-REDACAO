@@ -39,7 +39,16 @@ def criar_janela():
     # Redação
     ctk.CTkLabel(app, text='Digite sua Redação:', font=('default', 12, 'bold')).pack(pady=(0,5))
     redacao_textbox = ctk.CTkTextbox(app, width=350, height=200)
-    redacao_textbox.pack(pady=(0, 20))
+    redacao_textbox.pack(pady=(0, 10))
+
+    # Checkbox
+    check_var = ctk.StringVar(value="on")
+    checkbox = ctk.CTkCheckBox( master=app,
+    text="Mostrar senha",
+    variable=check_var,
+    onvalue="on",
+    offvalue="off",)
+    checkbox.pack(pady=(0,10),anchor='w',padx=25)
 
     # Botão login
     ctk.CTkButton(app, text='Entrar',
