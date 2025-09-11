@@ -56,7 +56,7 @@ async def main():
     redacao_texto = dados["redacao"]
 
     async with async_playwright() as pw:
-        navegador = await pw.chromium.launch(headless=False)
+        navegador = await pw.chromium.launch(channel="chrome", headless=False)
         pagina = await navegador.new_page()
         await pagina.goto("https://saladofuturo.educacao.sp.gov.br/escolha-de-perfil")
 
