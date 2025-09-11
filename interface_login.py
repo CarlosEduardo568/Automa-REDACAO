@@ -75,6 +75,8 @@ def criar_campos(app):
 
 # ----- Função para criar a janela principal -----
 def criar_janela():
+    largura_janela = 300
+    altura_janela = 300
     app = ctk.CTk()
     app.title('Login Automático')
     app.geometry('300x300')
