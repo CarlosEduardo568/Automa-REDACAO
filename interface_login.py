@@ -6,7 +6,7 @@ dados_login = {}
 def validar_login(usuario_entry, senha_entry, redacao_textbox, app):
     usuario = usuario_entry.get().strip()
     senha = senha_entry.get().strip()
-    redacao = redacao_textbox.get("1.0", "end-1c").strip()  # pega todo o texto da redação
+    redacao = redacao_textbox.get("1.0", "end-1c").strip()  # pega todoo o texto da redação
 
     if "-" in usuario:
         ra, digito = usuario.split("-")
