@@ -42,13 +42,20 @@ def criar_janela():
     redacao_textbox.pack(pady=(0, 10))
 
     # Checkbox
-    check_var = ctk.StringVar(value="on")
+    var_check = ctk.BooleanVar()
     checkbox = ctk.CTkCheckBox( master=app,
     text="Mostrar senha",
-    variable=check_var,
+    variable=var_check,
     onvalue="on",
-    offvalue="off",)
+    offvalue="off",
+    command=lambda: mostrar_senha())
     checkbox.pack(pady=(0,10),anchor='w',padx=25)
+
+    def mostrar_senha():
+        if var_check.get():  # True se marcado
+            entrada_senha.configure(show='')
+        else:
+            entrada_senha.configure(show='*')
 
     # Botão login
     ctk.CTkButton(app, text='Entrar',
