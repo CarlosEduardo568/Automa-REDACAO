@@ -7,7 +7,7 @@ ctk.set_appearance_mode('dark')
 dados_login = {"ra": "", "digito": "", "senha": ""}
 
 # ----- Função para validar login -----
-def validar_login(usuario_entry, senha_entry, resultado_login):
+def validar_login(usuario_entry, senha_entry, resultado_login,app):
     usuario = usuario_entry.get()
     senha = senha_entry.get()
 
