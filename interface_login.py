@@ -49,7 +49,7 @@ def criar_campos(app):
     botao_login = ctk.CTkButton(
         app,
         text='Logar',
-        command=lambda: validar_login(entrada_usuario, entrada_senha, resultado_login),
+        command=lambda: validar_login(entrada_usuario, entrada_senha, resultado_login,app),
         border_width=3,
         border_color='#005180',
         width=280
@@ -68,6 +68,8 @@ def criar_janela():
     criar_campos(app)
 
     app.mainloop()
+
+    return dados_login
 
 
 # ----- Executa o programa -----
