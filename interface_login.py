@@ -79,7 +79,10 @@ def criar_janela():
     altura_janela = 300
     app = ctk.CTk()
     app.title('Login Automático')
-    app.geometry('300x300')
+
+    # ------------ centralizar ---------
+    largura_tela = app.winfo_screenwidth()  # largura da tela
+    altura_tela = app.winfo_screenheight()  # altura da tela
 
     criar_campos(app)
 
