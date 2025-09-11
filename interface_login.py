@@ -45,7 +45,7 @@ def criar_campos(app):
     entrada_senha = ctk.CTkEntry(app, placeholder_text='Digite sua senha',
     show='*',
     width=280)
-    entrada_senha.pack()
+    entrada_senha.pack(pady=(0,10))
 
     # Checkbox mostrar senha
     checkbox_var = ctk.BooleanVar(value=False)
