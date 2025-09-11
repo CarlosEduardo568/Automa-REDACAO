@@ -84,6 +84,12 @@ def criar_janela():
     largura_tela = app.winfo_screenwidth()  # largura da tela
     altura_tela = app.winfo_screenheight()  # altura da tela
 
+    x = (largura_tela - largura_janela) // 2
+    y = (altura_tela - altura_janela) // 2
+
+    app.geometry(f"{largura_janela}x{altura_janela}+{x}+{y}")  # tamanho + posição
+
+    #-----------------------------------------
     criar_campos(app)
 
     app.mainloop()
