@@ -18,7 +18,12 @@ def validar_login(usuario_entry, senha_entry, resultado_login,app):
 
     # verifica se o login é válido
     if usuario or senha:
-        resultado_login.configure(text='entrando na Sala do Futuro...',text_color='green')
+        # Salva os valores nas variáveis globais
+        dados_login["ra"] = usuario[len(usuario) - 1]
+        dados_login["digito"] = usuario[-1]
+        dados_login["senha"] = senha
+
+        resultado_login.configure(text='Entrando na Sala do Futuro...',text_color='green')
 
         # encerrar a execução depois do login
         app.after(500, app.destroy)
