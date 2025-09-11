@@ -28,7 +28,24 @@ def validar_login(usuario_entry, senha_entry, redacao_textbox,resultado_login, a
 def criar_janela():
     app = ctk.CTk()
     app.title('Login Automático')
-    app.geometry('400x500')
+    # guardar altura e largura e uma variável
+    largura_janela = 400
+    altura_janela = 500
+
+    #---------- centralizar interface ------------
+
+    # Pega o tamanho da tela
+    screen_width = app.winfo_screenwidth()
+    screen_height = app.winfo_screenheight()
+
+    # Calcula a posição x e y
+    x = int((screen_width / 2) - (largura_janela / 2))
+    y = int((screen_height / 2) - (altura_janela / 2))
+
+    # Definir geometria já centralizada
+    app.geometry(f"{largura_janela}x{altura_janela}+{x}+{y}")
+
+    #------------------------------------------------------------------
 
     # Título
     ctk.CTkLabel(app, text='Login Sala do Futuro', font=('default', 15, 'bold')).pack(pady=(10, 17))
