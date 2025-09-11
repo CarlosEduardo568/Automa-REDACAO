@@ -42,9 +42,16 @@ def criar_campos(app):
     width=280)
     entrada_senha.pack()
 
-    # resultado login
-    resultado_login = ctk.CTkLabel(app, text='')
-    resultado_login.pack(pady=10)
+    # Checkbox mostrar senha
+    checkbox_var = ctk.BooleanVar(value=False)
+
+    checkbox = ctk.CTkCheckBox(
+        master=app,
+        text='Mostrar senha',
+        variable=checkbox_var,
+        onvalue=True,
+        offvalue=False)
+    checkbox.pack(pady=10,padx=10,anchor='w')
 
     # Botão login
     botao_login = ctk.CTkButton(
