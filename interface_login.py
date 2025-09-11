@@ -64,8 +64,9 @@ def criar_campos(app):
     )
     botao_login.pack(pady=10)
 
-# ---- checkbox ----
-
+    # resultado login
+    resultado_login = ctk.CTkLabel(app, text='')
+    resultado_login.pack(pady=10)
 
 # ----- Função para criar a janela principal -----
 def criar_janela():
