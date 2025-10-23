@@ -3,6 +3,7 @@ from playwright.async_api import async_playwright
 from interface_login import criar_janela
 from winotify import Notification
 import os
+import pyautogui
 
 async def preencher_dados_estudante(pagina, ra, digito, senha):
     # Seleciona "Estudante"
@@ -39,7 +40,7 @@ async def preencher_redacao(pagina, redacao_texto):
 
         # Espera a textarea da Redação aparecer e preenche
         textarea_redacao = pagina.get_by_role("textbox", name="Redação")
-        await textarea_redacao.wait_for(state="visible", timeout=10000)
+        await textarea_redacao.wait_for(state="visible", timeout=15000)
         await textarea_redacao.click()
         await textarea_redacao.fill(redacao_texto)
 
@@ -54,7 +55,7 @@ async def preencher_redacao(pagina, redacao_texto):
         await pagina.close()
 
     # Botões extras
-    botoes_extra = ["Salvar como Rascunho", "Enviar Redação", "Confirmar", "Avançar"]
+    botoes_extra = ["Salvar Rascunho", "Enviar Redação", "Confirmar", "Avançar"]
     for nome_botao in botoes_extra:
         try:
             btn = pagina.get_by_role("button", name=nome_botao)
@@ -75,6 +76,10 @@ async def main():
         navegador = await pw.chromium.launch(channel="chrome", headless=False)
         pagina = await navegador.new_page()
         await pagina.goto("https://saladofuturo.educacao.sp.gov.br/escolha-de-perfil")
+
+        # Abrir tela cheia
+        await pagina.wait_for_load_state("domcontentloaded")
+        pyautogui.press('f11')
 
         # Login
         await preencher_dados_estudante(pagina, ra, digito, senha)

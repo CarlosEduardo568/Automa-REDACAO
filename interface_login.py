@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import pyautogui
 
 ctk.set_appearance_mode('dark')
 dados_login = {}
@@ -35,12 +36,11 @@ def criar_janela():
     #---------- centralizar interface ------------
 
     # Pega o tamanho da tela
-    screen_width = app.winfo_screenwidth()
-    screen_height = app.winfo_screenheight()
+    largura_tela, altura_tela = pyautogui.size()
 
     # Calcula a posição x e y
-    x = int((screen_width / 2) - (largura_janela / 2))
-    y = int((screen_height / 2) - (altura_janela / 2))
+    x = int((largura_tela / 2) - (largura_janela / 2))
+    y = int((altura_tela / 2) - (altura_janela / 2))
 
     # Definir geometria já centralizada
     app.geometry(f"{largura_janela}x{altura_janela}+{x}+{y}")
