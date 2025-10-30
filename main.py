@@ -80,6 +80,11 @@ async def main():
         # Login
         await preencher_dados_estudante(pagina, ra, digito, senha)
 
+        # Maximizar tela
+        await pagina.wait_for_load_state('domcontentloaded')
+        pyautogui.hotkey('win', 'up')
+        await asyncio.sleep(0.5)  # Pequena pausa para garantir que a janela foi maximizada
+    
         # Redação
         await preencher_redacao(pagina, redacao_texto)
 
