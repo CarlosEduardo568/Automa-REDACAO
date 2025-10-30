@@ -7,7 +7,7 @@ import pyautogui
 async def preencher_dados_estudante(pagina, ra, digito, senha):
     # Seleciona "Estudante"
     await pagina.get_by_text('Estudante', exact=True).click()
-    await pagina.locator("#input-usuario-sed").wait_for(timeout=10000)
+    await pagina.locator("#input-usuario-sed").wait_for(timeout=000)
 
     # Preenche RA, dígito e senha
     await pagina.fill("#input-usuario-sed", ra)
@@ -27,17 +27,19 @@ async def preencher_dados_estudante(pagina, ra, digito, senha):
 
 async def preencher_redacao(pagina, redacao_texto):
     try:
+        # mostrar notificação de aviso para entrar na redação
+        await mostrar_notificacao(
+            "Entrar na Redação",
+            "Por favor entre na redação para prosseguir com a automação"
+        )
+        await asyncio.sleep(1)
+        pyautogui.press('f11') # deixa a tela em fullscreen
+
         # Hover na div da tarefa para expandir
         div_tarefa = pagina.locator("div.MuiPaper-root.css-16dazv1")
         await div_tarefa.wait_for(state="visible", timeout=10000)
         await div_tarefa.hover()
         await asyncio.sleep(0.5)  # tempo para animação
-
-        # mostrar notificação de aviso para entrar na redação
-        await mostrar_notificacao(
-            "Entre na Redação",
-            "Por favor entre na redação para prosseguir com a automação"
-        )
 
         # Espera a textarea da Redação aparecer e preenche
         textarea_redacao = pagina.get_by_role("textbox", name="Redação")
@@ -74,10 +76,6 @@ async def main():
         navegador = await pw.chromium.launch(channel="chrome", headless=False)
         pagina = await navegador.new_page()
         await pagina.goto("https://saladofuturo.educacao.sp.gov.br/escolha-de-perfil")
-
-        # Abrir tela cheia
-        await pagina.wait_for_load_state("domcontentloaded")
-        pyautogui.press('f11')
 
         # Login
         await preencher_dados_estudante(pagina, ra, digito, senha)
