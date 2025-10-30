@@ -1,8 +1,7 @@
 import asyncio
 from playwright.async_api import async_playwright
 from interface_login import criar_janela
-from winotify import Notification
-import os
+from notificacoes import mostrar_notificacao
 import pyautogui
 
 async def preencher_dados_estudante(pagina, ra, digito, senha):
@@ -16,10 +15,14 @@ async def preencher_dados_estudante(pagina, ra, digito, senha):
     await pagina.locator("input[type='password']").fill(senha)
 
     # Clica Acessar
-    await pagina.get_by_role('button', name='Acessar').click()
-    await pagina.wait_for_load_state("networkidle")
+    try:
+        await pagina.get_by_role('button', name='Acessar').click()
+        await pagina.wait_for_load_state("networkidle", timeout=5000)
+    except:
+        await asyncio.sleep(5)
 
     # Clica no primeiro botão Redação Paulista
+    await pagina.get_by_role("link", name="Redação Paulista").wait_for(state='visible', timeout=10000)
     await pagina.get_by_role("link", name="Redação Paulista").click()
 
 async def preencher_redacao(pagina, redacao_texto):
@@ -31,12 +34,10 @@ async def preencher_redacao(pagina, redacao_texto):
         await asyncio.sleep(0.5)  # tempo para animação
 
         # mostrar notificação de aviso para entrar na redação
-        entrar_redacao = Notification(
-            app_id="Automação Redação",
-            title="Entre na Redação",
-            msg="Por favor entre na redação para prosseguir com a automação",
-            icon=os.path.join(os.path.dirname(__file__), "icone.png"))
-        entrar_redacao.show()
+        await mostrar_notificacao(
+            "Entre na Redação",
+            "Por favor entre na redação para prosseguir com a automação"
+        )
 
         # Espera a textarea da Redação aparecer e preenche
         textarea_redacao = pagina.get_by_role("textbox", name="Redação")
@@ -44,14 +45,11 @@ async def preencher_redacao(pagina, redacao_texto):
         await textarea_redacao.click()
         await textarea_redacao.fill(redacao_texto)
 
-    except Exception:
-        # cria a notificação de aviso que falhou
-        redacao_nao_encontrada = Notification(
-            app_id="Automação Redação",
-            title="Redação Não Encontrada",
-            msg="Finalizando app",
-            icon=os.path.join(os.path.dirname(__file__), "icone.png"))
-        redacao_nao_encontrada.show()
+    except Exception as e:
+        await mostrar_notificacao(
+            "Redação Não Encontrada",
+            "Finalizando app"
+        )
         await pagina.close()
 
     # Botões extras
