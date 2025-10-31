@@ -18,8 +18,6 @@ def localizar_icone(nome_arquivo="icone.png"):  # Mudado para .png que é mais c
             if caminho and os.path.isfile(caminho):
                 return caminho
                 
-        # Se não encontrar o ícone, retorna None (winotify usará ícone padrão)
-        return None
     except Exception:
         return None
 

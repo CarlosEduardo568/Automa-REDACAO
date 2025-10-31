@@ -29,10 +29,10 @@ async def preencher_redacao(pagina, redacao_texto):
     try:
         # mostrar notificação de aviso para entrar na redação
         await mostrar_notificacao(
-            "Entrar na Redação",
-            "Por favor entre na redação para prosseguir com a automação"
+            "Entrar na Redação📑",
+            "Por favor entre na redação para prosseguir com a automação!"
         )
-        await asyncio.sleep(1)
+        await asyncio.sleep(3)
         pyautogui.press('f11') # deixa a tela em fullscreen
 
         # Hover na div da tarefa para expandir
@@ -49,8 +49,8 @@ async def preencher_redacao(pagina, redacao_texto):
 
     except Exception as e:
         await mostrar_notificacao(
-            "Redação Não Encontrada",
-            "Finalizando app"
+            "Redação Não Encontrada❌",
+            "Finalizando app..."
         )
         await pagina.close()
 
@@ -77,16 +77,12 @@ async def main():
         pagina = await navegador.new_page()
         await pagina.goto("https://saladofuturo.educacao.sp.gov.br/escolha-de-perfil")
 
-        # Login
-        await preencher_dados_estudante(pagina, ra, digito, senha)
-
         # Maximizar tela
         await pagina.wait_for_load_state('domcontentloaded')
         pyautogui.hotkey('win', 'up')
-        await asyncio.sleep(0.5)  # Pequena pausa para garantir que a janela foi maximizada
+
+        # Login
+        await preencher_dados_estudante(pagina, ra, digito, senha)
     
         # Redação
         await preencher_redacao(pagina, redacao_texto)
-
-if __name__ == "__main__":
-    asyncio.run(main())

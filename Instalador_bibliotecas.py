@@ -1,10 +1,13 @@
+import asyncio
 import sys
 import subprocess
 import os
 import requests
 import tempfile
+from notificacoes import mostrar_notificacao
+from main import main
 
-def instalar_playwright_se_preciso():
+async def instalar_playwright_se_preciso():
     """
     Garante que o Playwright e os navegadores estejam instalados.
     Mesmo em PCs sem Python ou Playwright pré-instalados.
@@ -13,7 +16,7 @@ def instalar_playwright_se_preciso():
         import playwright
         print("✅ Playwright já instalado.")
     except ImportError:
-        print("🔄 Instalando Playwright...")
+        mostrar_notificacao('Instalador',"🔄 Instalando Playwright...")
         try:
             subprocess.run([sys.executable, "-m", "pip", "install", "--upgrade", "playwright"], check=True)
             print("✅ Playwright instalado!")
@@ -22,7 +25,7 @@ def instalar_playwright_se_preciso():
             return
 
 
-def chrome_instalado():
+async def chrome_instalado():
     """Verifica se o Google Chrome está instalado no Windows."""
     caminhos = [
         r"C:\Program Files\Google\Chrome\Application\chrome.exe",
@@ -34,15 +37,15 @@ def chrome_instalado():
         if os.path.exists(caminho):
             print(f"✅ Chrome encontrado em: {caminho}")
             return True
-    print("❌ Google Chrome não encontrado.")
+    await mostrar_notificacao('Instalador', "❌ Google Chrome não encontrado.")
     return False
 
 
-def instalar_chrome():
+async def instalar_chrome():
     """Baixa e instala o Google Chrome automaticamente (modo silencioso)."""
     url_instalador = "https://dl.google.com/chrome/install/latest/chrome_installer.exe"
 
-    print("⬇️ Baixando instalador do Google Chrome...")
+    await mostrar_notificacao('Instalador', "⬇️ Baixando instalador do Google Chrome...")
     temp_path = os.path.join(tempfile.gettempdir(), "chrome_installer.exe")
 
     try:
@@ -52,21 +55,29 @@ def instalar_chrome():
             for chunk in response.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(chunk)
-        print(f"📦 Instalador baixado em: {temp_path}")
+        await mostrar_notificacao('Instalador', "📦 Instalador baixado")
 
-        print("⚙️ Instalando o Google Chrome (modo silencioso)...")
-        subprocess.run([temp_path, "/silent", "/install"], check=True)
-        print("✅ Instalação concluída com sucesso!")
+        await mostrar_notificacao('Instalador', "⚙️ Instalando o Google Chrome...")
+        subprocess.run([temp_path, "/silent", "/install"], check=True,stdout=subprocess.DEVNULL,
+    stderr=subprocess.DEVNULL)
+        await mostrar_notificacao('Instalador', "✅ Instalação concluída com sucesso!")
 
     except Exception as e:
-        print(f"❌ Erro ao baixar ou instalar o Chrome: {e}")
+        await mostrar_notificacao('Instalador', f"❌ Erro ao baixar ou instalar o Chrome: {e}")
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
             print("🧹 Instalador temporário removido.")
+    
+# 🔧 Função principal assíncrona que organiza a execução
+async def instalar():
+    await instalar_playwright_se_preciso()
+
+    if not await chrome_instalado():
+        await instalar_chrome()
+
+    await main()
 
 
 if __name__ == "__main__":
-    instalar_playwright_se_preciso()
-    if not chrome_instalado():
-        instalar_chrome()
+    asyncio.run(instalar())
