@@ -5,7 +5,6 @@ import os
 import requests
 import tempfile
 from notificacoes import mostrar_notificacao
-from main import main
 
 async def instalar_playwright_se_preciso():
     """
@@ -70,14 +69,8 @@ async def instalar_chrome():
             print("🧹 Instalador temporário removido.")
     
 # 🔧 Função principal assíncrona que organiza a execução
-async def instalar():
+async def instalar_dependencias():
     await instalar_playwright_se_preciso()
 
     if not await chrome_instalado():
         await instalar_chrome()
-
-    await main()
-
-
-if __name__ == "__main__":
-    asyncio.run(instalar())

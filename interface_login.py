@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import pyautogui
+import os
 
 ctk.set_appearance_mode('dark')
 dados_login = {}
@@ -26,9 +27,10 @@ def validar_login(usuario_entry, senha_entry, redacao_textbox,resultado_login, a
     else:
         resultado_login.configure(text='Login ou senha inválidos',text_color='red')
 
-def criar_janela():
+def configurar_janela():
     app = ctk.CTk()
-    app.title('Login Automático')
+    app.title('Automa Redação')
+    app.iconbitmap(os.path.join(os.path.dirname(os.path.abspath(__file__)), "icone.png"))
     # guardar altura e largura e uma variável
     largura_janela = 400
     altura_janela = 500
@@ -44,9 +46,10 @@ def criar_janela():
 
     # Definir geometria já centralizada
     app.geometry(f"{largura_janela}x{altura_janela}+{x}+{y}")
-
+    return app
     #------------------------------------------------------------------
 
+def criar_campos(app):
     # Título
     ctk.CTkLabel(app, text='Login Sala do Futuro', font=('default', 15, 'bold')).pack(pady=(10, 17))
 
@@ -90,5 +93,9 @@ def criar_janela():
     resultado_login = ctk.CTkLabel(app,text='')
     resultado_login.pack(pady=10)
 
+"----------------------------------------------------------------"
+def criar_janela_login():
+    app = configurar_janela()
+    criar_campos(app)
     app.mainloop()
     return dados_login
