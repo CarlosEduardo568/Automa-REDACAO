@@ -85,9 +85,11 @@ def criar_campos(app):
 
 
     # Botão login
-    ctk.CTkButton(app, text='Entrar',
+    bnt_login = ctk.CTkButton(app, text='Entrar',
                   command= lambda:validar_login(entrada_usuario, entrada_senha, redacao_textbox, resultado_login, app),
-                  border_width=2, border_color='#005180', width=280).pack()
+                  border_width=2, border_color='#005180', width=280)
+    bnt_login.pack()
+    app.bind('<Return>', lambda event: bnt_login.invoke())# ligar a tecla Enter ao botão "Entrar"
 
     # resulado login
     resultado_login = ctk.CTkLabel(app,text='')

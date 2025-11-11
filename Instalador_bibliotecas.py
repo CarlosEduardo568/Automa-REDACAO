@@ -57,8 +57,9 @@ async def instalar_chrome():
         await mostrar_notificacao('Instalador', "📦 Instalador baixado")
 
         await mostrar_notificacao('Instalador', "⚙️ Instalando o Google Chrome...")
-        subprocess.run([temp_path, "/silent", "/install"], check=True,stdout=subprocess.DEVNULL,
-    stderr=subprocess.DEVNULL)
+        await asyncio.sleep(2)
+
+        subprocess.run([temp_path, "/install", "/nolaunchchrome"], check=True)
         await mostrar_notificacao('Instalador', "✅ Instalação concluída com sucesso!")
 
     except Exception as e:
