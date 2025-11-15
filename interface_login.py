@@ -123,8 +123,7 @@ def bnt_trancrever_redação_audio(redacao_textbox,app):
     border_width=2,
     border_color="#00BEB5"
     )
-    bnt_gravacao.pack()
-    bnt_gravacao.place(relx=0.95, rely=0.252, anchor="ne")
+    bnt_gravacao.place(relx=0.95, rely=0.28, anchor="ne")
         
 
 "----------------------------------------------------------------"

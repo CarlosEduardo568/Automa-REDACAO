@@ -68,10 +68,18 @@ async def instalar_chrome():
         if os.path.exists(temp_path):
             os.remove(temp_path)
             print("🧹 Instalador temporário removido.")
+
+def verificar_ffmpeg():
+    def ffmpeg_path():
+        base = getattr(sys, "_MEIPASS", os.getcwd())
+        return os.path.join(base, "ffmpeg.exe")
+
+    os.environ["PATH"] = os.environ["PATH"] + ";" + ffmpeg_path()
     
 # 🔧 Função principal assíncrona que organiza a execução
 async def instalar_dependencias():
     await instalar_playwright_se_preciso()
+    verificar_ffmpeg()
 
     if not await chrome_instalado():
         await instalar_chrome()
