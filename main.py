@@ -1,6 +1,5 @@
 import asyncio
 from Instalador_bibliotecas import instalar_dependencias
-from automatizacao_login_redacao import automatizar_login_redacao
 
 async def main():
     # 1️⃣ instalar as dependências necessárias

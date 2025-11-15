@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import pyautogui
 import os
+from transcrever_audio import iniciar_gravacao, parar_gravacao
 
 ctk.set_appearance_mode('dark')
 dados_login = {}
@@ -95,9 +96,41 @@ def criar_campos(app):
     resultado_login = ctk.CTkLabel(app,text='')
     resultado_login.pack(pady=10)
 
+    return redacao_textbox
+
+def bnt_trancrever_redação_audio(redacao_textbox,app):
+    gravando = False
+    def acao_botao():
+        nonlocal gravando
+        # se não tiver gravavando começará a gravar
+        if not gravando:
+            gravando = True
+            bnt_gravacao.configure(text="⏹ Parar gravação",fg_color="#470101",border_color="#BE0000")
+            iniciar_gravacao()
+        # se estiver irá parar e mostrar o texto
+        else:
+            gravando = False
+            bnt_gravacao.configure(text="Gravar🎤",fg_color="#014704",border_color="#00BEB5")
+            texto = parar_gravacao()
+            redacao_textbox.insert("end", texto + "\n")
+    
+    # botão resposnsável por iniciar e parar
+    bnt_gravacao = ctk.CTkButton(
+    app,
+    text="Gravar🎤",
+    command=acao_botao,
+    fg_color="#014704",
+    border_width=2,
+    border_color="#00BEB5"
+    )
+    bnt_gravacao.pack()
+    bnt_gravacao.place(relx=0.95, rely=0.252, anchor="ne")
+        
+
 "----------------------------------------------------------------"
 def criar_janela_login():
     app = configurar_janela()
-    criar_campos(app)
+    redacao_textbox = criar_campos(app)
+    bnt_trancrever_redação_audio(redacao_textbox, app)
     app.mainloop()
     return dados_login

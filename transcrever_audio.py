@@ -5,35 +5,40 @@ import tempfile
 import scipy.io.wavfile as wav
 import os
 
-def transcrever_audio_texto():
-    print("Pressione Enter para começar a gravação...")
-    input()  # espera Enter
+audio_buffer = []
+stream = None
+samplerate = 16000
 
-    print("Gravando! Pressione Enter novamente para parar...")
-    audio_buffer = []  # vai armazenar blocos
+def callback(indata, frames, time, status):
+    audio_buffer.append(indata.copy())
 
-    def callback(indata, frames, time, status):
-        audio_buffer.append(indata.copy())
-
-    # Inicia stream
-    samplerate = 16000
+def iniciar_gravacao():
+    global audio_buffer, stream
+    audio_buffer = []
     stream = sd.InputStream(samplerate=samplerate, channels=1, callback=callback)
     stream.start()
+    print("🎙 Gravando...")
 
-    input()  # espera Enter para parar
-    stream.stop()
-    print("Gravação finalizada!")
+def parar_gravacao():
+    global stream
 
-    # Concatena todos os blocos
+    if stream:
+        stream.stop()
+        stream.close()
+        print("⏹ Gravação finalizada!")
+
+    # junta áudio
     audio_array = np.concatenate(audio_buffer, axis=0)
 
-    # Salva arquivo temporário
-    temp_file = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
-    temp_file.close()
-    wav.write(temp_file.name, samplerate, (audio_array * 32767).astype(np.int16))
+    # salva temporário
+    temp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+    temp.close()
+    wav.write(temp.name, samplerate, (audio_array * 32767).astype(np.int16))
 
-    # Transcrição com Whisper
-    model = whisper.load_model("small")
-    texto_transcrito = model.transcribe(temp_file.name, language="pt")
+    # Whisper
+    modelo = whisper.load_model("small")
+    texto_transcrito = modelo.transcribe(temp.name, language="pt")
 
-    os.remove(temp_file.name)
+    os.remove(temp.name)
+
+    return texto_transcrito["text"]
