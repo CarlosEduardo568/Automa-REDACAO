@@ -3,6 +3,7 @@ import pyautogui
 import os
 from transcrever_audio import iniciar_gravacao, parar_gravacao
 
+
 ctk.set_appearance_mode('dark')
 dados_login = {}
 
@@ -97,39 +98,73 @@ def criar_campos(app):
     resultado_login.pack(pady=10)
 
     return redacao_textbox
+#---------------------------------------------------------------------------------#
 
+# globais necessárias
+gravando = False
 def bnt_trancrever_redação_audio(redacao_textbox,app):
-    gravando = False
-    def acao_botao():
-        nonlocal gravando
-        # se não tiver gravavando começará a gravar
+    texto_botao = ctk.StringVar(value="Gravar🎤")
+
+    # cores desejadas
+    COR_GRAVAR = {"fg": "#014704", "hover": "#0a6e0a", "border": "#00BEB5"}
+    COR_PARAR  = {"fg": "#470101", "hover": "#7a0000", "border": "#BE0000"}
+
+    # função que aplica as cores no botão
+    def aplicar_cores(botao, cores):
+        botao.configure(
+            fg_color = cores["fg"],
+            hover_color = cores["hover"],
+            border_color = cores["border"]
+        )
+    #--------------------------------------#
+
+    # ação do botão (alternar)
+    def alternar_gravacao():
+        global gravando
         if not gravando:
+            # iniciar gravação
             gravando = True
-            bnt_gravacao.configure(text="⏹ Parar gravação",fg_color="#470101",border_color="#BE0000")
+            texto_botao.set("⏹ Parar gravação")
+            aplicar_cores(bnt_gravacao, COR_PARAR)
             iniciar_gravacao()
-        # se estiver irá parar e mostrar o texto
         else:
+            # parar gravação
             gravando = False
-            bnt_gravacao.configure(text="Gravar🎤",fg_color="#014704",border_color="#00BEB5")
-            texto = parar_gravacao()
-            redacao_textbox.insert("end", texto + "\n")
-    
-    # botão resposnsável por iniciar e parar
-    bnt_gravacao = ctk.CTkButton(
-    app,
-    text="Gravar🎤",
-    command=acao_botao,
-    fg_color="#014704",
-    border_width=2,
-    border_color="#00BEB5"
-    )
-    bnt_gravacao.place(relx=0.95, rely=0.28, anchor="ne")
+            texto_botao.set("Gravar🎤")
+            aplicar_cores(bnt_gravacao, COR_GRAVAR)
+            
+        # guardar o ID
+        global task_transcrever
+        task_transcrever = app.after(100, transcrever_depois)
+    #---------------------------------------------------------
+
+    def transcrever_depois():
+        if not app.winfo_exists():  # se a janela já foi fechada
+            return
         
+        # chama sua função de transcrição (pode retornar string)
+        texto = parar_gravacao()  # ou parar_gravacao() dependendo da sua arquitetura
+        if texto:
+            redacao_textbox.insert("end", texto + "\n")
+
+    # criação do botão (somente uma vez)
+    bnt_gravacao = ctk.CTkButton(
+        app,
+        textvariable=texto_botao,
+        command=alternar_gravacao,
+        border_width=2,
+        text_color="white"
+    )
+    # aplica cor inicial
+    aplicar_cores(bnt_gravacao, COR_GRAVAR)
+    bnt_gravacao.place(relx=0.95, rely=0.28, anchor="ne")
 
 "----------------------------------------------------------------"
 def criar_janela_login():
     app = configurar_janela()
     redacao_textbox = criar_campos(app)
     bnt_trancrever_redação_audio(redacao_textbox, app)
+    #iniciar o programa
     app.mainloop()
+    # retornar dados
     return dados_login

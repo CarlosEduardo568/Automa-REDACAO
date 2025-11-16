@@ -1,8 +1,12 @@
 import asyncio
 from Instalador_bibliotecas import instalar_dependencias
+from notificacoes import mostrar_notificacao
 
 async def main():
-    # 1️⃣ instalar as dependências necessárias
+    # mostrar notificação de aviso
+    await mostrar_notificacao('Aguarde⌛','O aplicativo abrirá em breve.')
+
+    # 1️⃣  instalar as dependências necessárias
     await instalar_dependencias()
 
     # 2️⃣ criar a janela de login e obter dados

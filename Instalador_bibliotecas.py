@@ -2,26 +2,8 @@ import asyncio
 import sys
 import subprocess
 import os
-import requests
 import tempfile
 from notificacoes import mostrar_notificacao
-
-async def instalar_playwright_se_preciso():
-    """
-    Garante que o Playwright e os navegadores estejam instalados.
-    Mesmo em PCs sem Python ou Playwright pré-instalados.
-    """
-    try:
-        import playwright
-        print("✅ Playwright já instalado.")
-    except ImportError:
-        mostrar_notificacao('Instalador',"🔄 Instalando Playwright...")
-        try:
-            subprocess.run([sys.executable, "-m", "pip", "install", "--upgrade", "playwright"], check=True)
-            print("✅ Playwright instalado!")
-        except Exception as e:
-            print("❌ Erro ao instalar Playwright:", e)
-            return
 
 
 async def chrome_instalado():
@@ -41,7 +23,8 @@ async def chrome_instalado():
 
 
 async def instalar_chrome():
-    """Baixa e instala o Google Chrome automaticamente (modo silencioso)."""
+    """Baixa e instala o Google Chrome automaticamente."""
+    import requests
     url_instalador = "https://dl.google.com/chrome/install/latest/chrome_installer.exe"
 
     await mostrar_notificacao('Instalador', "⬇️ Baixando instalador do Google Chrome...")
@@ -69,17 +52,21 @@ async def instalar_chrome():
             os.remove(temp_path)
             print("🧹 Instalador temporário removido.")
 
-def verificar_ffmpeg():
-    def ffmpeg_path():
-        base = getattr(sys, "_MEIPASS", os.getcwd())
-        return os.path.join(base, "ffmpeg.exe")
 
-    os.environ["PATH"] = os.environ["PATH"] + ";" + ffmpeg_path()
+def verificar_ffmpeg():
+    """
+    Adiciona automaticamente o ffmpeg ao PATH.
+    Funciona em Python normal e PyInstaller.
+    """
+    base = getattr(sys, "_MEIPASS", os.getcwd())
+    ffmpeg_dir = base  
+
+    if ffmpeg_dir not in os.environ["PATH"]:
+        os.environ["PATH"] += ";" + ffmpeg_dir
     
 # 🔧 Função principal assíncrona que organiza a execução
 async def instalar_dependencias():
-    await instalar_playwright_se_preciso()
-    verificar_ffmpeg()
-
+    verificar_ffmpeg
+    
     if not await chrome_instalado():
         await instalar_chrome()

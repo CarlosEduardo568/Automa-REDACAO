@@ -1,4 +1,5 @@
 import asyncio
+import sys
 from playwright.async_api import async_playwright
 from notificacoes import mostrar_notificacao
 import pyautogui
@@ -64,10 +65,13 @@ async def preencher_redacao(pagina, redacao_texto):
             pass
 
 async def automatizar_login_redacao(dados):
-    ra = dados["ra"]
-    digito = dados["digito"]
-    senha = dados["senha"]
-    redacao_texto = dados["redacao"]
+    try:
+        ra = dados["ra"]
+        digito = dados["digito"]
+        senha = dados["senha"]
+        redacao_texto = dados["redacao"]
+    except:
+        sys.exit(0)
 
     async with async_playwright() as pw:
         navegador = await pw.chromium.launch(channel="chrome", headless=False)
