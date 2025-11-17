@@ -133,9 +133,8 @@ def bnt_trancrever_redação_audio(redacao_textbox,app):
             texto_botao.set("Gravar🎤")
             aplicar_cores(bnt_gravacao, COR_GRAVAR)
             
-        # guardar o ID
-        global task_transcrever
-        task_transcrever = app.after(100, transcrever_depois)
+            # chamar transcrição SOMENTE ao parar
+            app.after(10, transcrever_depois)
     #---------------------------------------------------------
 
     def transcrever_depois():
@@ -144,6 +143,7 @@ def bnt_trancrever_redação_audio(redacao_textbox,app):
         
         # chama sua função de transcrição (pode retornar string)
         texto = parar_gravacao()  # ou parar_gravacao() dependendo da sua arquitetura
+
         if texto:
             redacao_textbox.insert("end", texto + "\n")
 
