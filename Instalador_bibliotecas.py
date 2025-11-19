@@ -4,6 +4,7 @@ import subprocess
 import os
 import tempfile
 from notificacoes import mostrar_notificacao
+import whisper
 
 
 async def chrome_instalado():
@@ -53,20 +54,44 @@ async def instalar_chrome():
             print("🧹 Instalador temporário removido.")
 
 
-def verificar_ffmpeg():
-    """
-    Adiciona automaticamente o ffmpeg ao PATH.
-    Funciona em Python normal e PyInstaller.
-    """
-    base = getattr(sys, "_MEIPASS", os.getcwd())
-    ffmpeg_dir = base  
+# ----------- RESOLVE CAMINHOS DO PYINSTALLER -----------
+def resource_path(relative):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative)
+    return os.path.join(os.getcwd(), relative)
 
-    if ffmpeg_dir not in os.environ["PATH"]:
-        os.environ["PATH"] += ";" + ffmpeg_dir
+
+# Corrige caminho do MEL FILTERS (obrigatório para PyInstaller)
+whisper.audio.MEL_FILTERS_PATH = resource_path("whisper/assets/mel_filters.npz")
+
+
+# ----------- CONFIGURAÇÃO DO FFMPEG INTERNO -------------
+def ffmpeg_folder():
+    """Retorna o caminho da pasta ffmpeg/bin que deve estar junto do .exe"""
+    base = getattr(sys, "_MEIPASS", os.getcwd())
+    return os.path.join(base, "ffmpeg", "bin")
+
+
+def configurar_ffmpeg():
+    """Adiciona ffmpeg/bin ao PATH e define caminhos diretos para Whisper"""
+    ffbin = ffmpeg_folder()
+
+    ffmpeg_exe = os.path.join(ffbin, "ffmpeg.exe")
+    ffprobe_exe = os.path.join(ffbin, "ffprobe.exe")
+
+    # Adiciona ao PATH
+    os.environ["PATH"] += os.pathsep + ffbin
+
+    # Define para Whisper
+    whisper.audio.FFMPEG_PATH = ffmpeg_exe
+    whisper.audio.FFPROBE_PATH = ffprobe_exe
+
+
+
     
 # 🔧 Função principal assíncrona que organiza a execução
 async def instalar_dependencias():
-    verificar_ffmpeg
+    configurar_ffmpeg()
     
     if not await chrome_instalado():
         await instalar_chrome()

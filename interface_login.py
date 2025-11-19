@@ -2,6 +2,7 @@ import customtkinter as ctk
 import pyautogui
 import os
 from transcrever_audio import iniciar_gravacao, parar_gravacao
+import threading
 
 
 ctk.set_appearance_mode('dark')
@@ -97,12 +98,12 @@ def criar_campos(app):
     resultado_login = ctk.CTkLabel(app,text='')
     resultado_login.pack(pady=10)
 
-    return redacao_textbox
+    return redacao_textbox,resultado_login
 #---------------------------------------------------------------------------------#
 
 # globais necessárias
 gravando = False
-def bnt_trancrever_redação_audio(redacao_textbox,app):
+def bnt_trancrever_redação_audio(redacao_textbox,app,resultado_login):
     texto_botao = ctk.StringVar(value="Gravar🎤")
 
     # cores desejadas
@@ -117,6 +118,29 @@ def bnt_trancrever_redação_audio(redacao_textbox,app):
             border_color = cores["border"]
         )
     #--------------------------------------#
+
+    def transcrever_depois():
+        if not app.winfo_exists():  # se a janela já foi fechada
+            return
+        resultado_login.configure(text="Processando áudio...")
+
+        def tarefa():
+            texto = parar_gravacao()  # roda em segundo plano)  # opcional
+
+            # atualizar a interface principal
+            def atualizar_ui():
+                if texto:
+                    resultado_login.configure(text="Transcrição concluída!")
+                    redacao_textbox.insert("end", texto + "\n")
+                else:
+                    resultado_login.configure(text="Nenhum áudio capturado.")
+
+            # executa na thread do Tkinter
+            resultado_login.after(0, atualizar_ui)
+
+        threading.Thread(target=tarefa, daemon=True).start()
+
+    #-----------------------------------------------------------------------------
 
     # ação do botão (alternar)
     def alternar_gravacao():
@@ -137,16 +161,6 @@ def bnt_trancrever_redação_audio(redacao_textbox,app):
             app.after(10, transcrever_depois)
     #---------------------------------------------------------
 
-    def transcrever_depois():
-        if not app.winfo_exists():  # se a janela já foi fechada
-            return
-        
-        # chama sua função de transcrição (pode retornar string)
-        texto = parar_gravacao()  # ou parar_gravacao() dependendo da sua arquitetura
-
-        if texto:
-            redacao_textbox.insert("end", texto + "\n")
-
     # criação do botão (somente uma vez)
     bnt_gravacao = ctk.CTkButton(
         app,
@@ -159,11 +173,11 @@ def bnt_trancrever_redação_audio(redacao_textbox,app):
     aplicar_cores(bnt_gravacao, COR_GRAVAR)
     bnt_gravacao.place(relx=0.95, rely=0.28, anchor="ne")
 
-"----------------------------------------------------------------"
+"------------------------------------------------------------------------"
 def criar_janela_login():
     app = configurar_janela()
-    redacao_textbox = criar_campos(app)
-    bnt_trancrever_redação_audio(redacao_textbox, app)
+    redacao_textbox, resultado_login = criar_campos(app)
+    bnt_trancrever_redação_audio(redacao_textbox, app,resultado_login)
     #iniciar o programa
     app.mainloop()
     # retornar dados
